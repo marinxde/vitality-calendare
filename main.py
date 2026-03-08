@@ -1,16 +1,15 @@
 import requests
 from icalendar import Calendar, Event
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 # --- CONFIGURATION ---
 API_TOKEN = "iOmq7nkJkkx72Eyit81eRETKe5x-EehrrznAcTXaVvCaVSv2CdM"
-TEAM_ID = "3455"  # ID officiel de Vitality sur PandaScore
-# On ajoute 'upcoming' pour n'avoir que les matchs futurs ou 'sort=begin_at' pour l'ordre chronologique
-URL = f"https://api.pandascore.co/teams/3455/matches?token=iOmq7nkJkkx72Eyit81eRETKe5x-EehrrznAcTXaVvCaVSv2CdM&filter[future]=true"
+TEAM_ID = "3455" 
+# On filtre pour n'avoir que les matchs futurs de 2026
+URL = f"https://api.pandascore.co/teams/3455/matches?token=iOmq7nkJkkx72Eyit81eRETKe5x-EehrrznAcTXaVvCaVSv2CdM&filter[future]=true&sort=begin_at"
 
 def generate_vitality_calendar():
-    # 1. Récupération du JSON
     response = requests.get(URL)
     if response.status_code != 200:
         print("Erreur API")
@@ -18,46 +17,48 @@ def generate_vitality_calendar():
     
     matches = response.json()
     
-    # 2. Initialisation du Calendrier
     cal = Calendar()
     cal.add('prodid', '-//Vitality CS Calendar//FR')
     cal.add('version', '2.0')
-    cal.add('x-wr-calname', 'Vitality CS Matches') # Nom qui apparaîtra sur ton iPhone
+    cal.add('x-wr-calname', 'Vitality CS 2026') 
 
     for match in matches:
-        # On ignore les matchs sans date précise ou annulés
         if not match.get('begin_at') or match.get('status') == 'canceled':
             continue
 
         event = Event()
         
-        # --- EXTRACTION DES DONNÉES ---
-        # Nom de l'adversaire (gestion du cas où l'adversaire n'est pas encore connu)
-        opponent = "TBD"
-        if match['opponents']:
-            opponent = match['opponents'][0]['opponent']['name']
+        # --- LOGIQUE POUR TROUVER L'ADVERSAIRE ---
+        opponent_name = "Adversaire à déterminer"
+        if match.get('opponents'):
+            for opp in match['opponents']:
+                # On compare l'ID pour ne pas s'afficher soi-même
+                if str(opp['opponent']['id']) != TEAM_ID:
+                    opponent_name = opp['opponent']['name']
+                    break
         
+        # --- NOM DE L'ÉVÉNEMENT (TOURNOI) ---
         tournament = match['league']['name']
-        match_name = f"Vitality vs {opponent} ({match['match_type'].upper()})"
+        # Titre du calendrier : Vitality vs Adversaire (Nom du Tournoi)
+        match_summary = f"Vitality vs {opponent_name} [{tournament}]"
         
         # --- GESTION DES DATES ---
-        # PandaScore envoie du format : 2024-05-20T15:00:00Z (UTC)
         start_time = datetime.strptime(match['begin_at'], '%Y-%m-%dT%H:%M:%SZ')
         start_time = start_time.replace(tzinfo=pytz.UTC)
+        # Fin du match estimée à +3h
+        end_time = start_time + timedelta(hours=3)
         
-        # --- CONSTRUCTION DE L'ÉVÉNEMENT ---
-        event.add('summary', match_name)
+        # --- CONSTRUCTION ---
+        event.add('summary', match_summary)
         event.add('dtstart', start_time)
-        # On estime la durée à 3h pour bloquer le créneau
-        event.add('dtend', start_time.replace(hour=(start_time.hour + 3) % 24))
-        event.add('description', f"Tournoi : {tournament}\nStream : {match.get('official_stream_url', 'Non défini')}")
-        event.add('uid', str(match['id']) + "@vitality.fans") # Identifiant unique pour éviter les doublons
+        event.add('dtend', end_time)
+        event.add('description', f"Tournoi : {tournament}\nType : {match['match_type'].upper()}\nStream : {match.get('official_stream_url', 'Non défini')}")
+        event.add('uid', str(match['id']) + "@vitality.fans")
         
         cal.add_component(event)
 
-    # 3. Écriture du fichier .ics
     with open("vitality_matches.ics", "wb") as f:
         f.write(cal.to_ical())
-    print("Fichier vitality_matches.ics généré avec succès !")
+    print("Fichier mis à jour avec les adversaires et tournois !")
 
 generate_vitality_calendar()
