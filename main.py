@@ -7,7 +7,7 @@ import pytz
 API_TOKEN = "iOmq7nkJkkx72Eyit81eRETKe5x-EehrrznAcTXaVvCaVSv2CdM"
 TEAM_ID = "3455"  # ID officiel de Vitality sur PandaScore
 # On ajoute 'upcoming' pour n'avoir que les matchs futurs ou 'sort=begin_at' pour l'ordre chronologique
-URL = f"https://api.pandascore.co/teams/3455/matches?token=iOmq7nkJkkx72Eyit81eRETKe5x-EehrrznAcTXaVvCaVSv2CdM&sort=begin_at"
+URL = f"https://api.pandascore.co/teams/3455/matches?token=iOmq7nkJkkx72Eyit81eRETKe5x-EehrrznAcTXaVvCaVSv2CdM&filter[future]=true"
 
 def generate_vitality_calendar():
     # 1. Récupération du JSON
