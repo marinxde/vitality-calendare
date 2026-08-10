@@ -2,4 +2,12 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Vitality CS Calendar//FR
 X-WR-CALNAME:Vitality CS 2026
+BEGIN:VEVENT
+SUMMARY:Vitality vs 100 Thieves [Esports World Cup]
+DTSTART:20260812T154000Z
+DTEND:20260812T184000Z
+UID:1624231@vitality.fans
+DESCRIPTION:Tournoi : Esports World Cup\nType : BEST_OF\nStream : Non déf
+ ini
+END:VEVENT
 END:VCALENDAR
