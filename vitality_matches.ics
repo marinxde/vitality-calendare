@@ -10,4 +10,11 @@ UID:1624403@vitality.fans
 DESCRIPTION:Tournoi : Esports World Cup\nType : BEST_OF\nStream : Non déf
  ini
 END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Vitality vs Inner Circle Esports [BLAST Open]
+DTSTART:20260827T090000Z
+DTEND:20260827T120000Z
+UID:1640199@vitality.fans
+DESCRIPTION:Tournoi : BLAST Open\nType : BEST_OF\nStream : Non défini
+END:VEVENT
 END:VCALENDAR
