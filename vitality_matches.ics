@@ -3,10 +3,10 @@ VERSION:2.0
 PRODID:-//Vitality CS Calendar//FR
 X-WR-CALNAME:Vitality CS 2026
 BEGIN:VEVENT
-SUMMARY:Vitality vs FURIA [StarLadder StarSeries]
-DTSTART:20260918T173000Z
-DTEND:20260918T203000Z
-UID:1685169@vitality.fans
+SUMMARY:Vitality vs Aurora Gaming [StarLadder StarSeries]
+DTSTART:20260919T150000Z
+DTEND:20260919T180000Z
+UID:1685172@vitality.fans
 DESCRIPTION:Tournoi : StarLadder StarSeries\nType : BEST_OF\nStream : Non 
  défini
 END:VEVENT
